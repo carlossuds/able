@@ -18,17 +18,14 @@ interface FinnhubMessage {
 export class FinnhubService implements OnModuleInit {
   private ws: WebSocket;
   private readonly logger = new Logger(FinnhubService.name);
-  private readonly symbols = [
-    'BINANCE:ETHUSDC',
-    'BINANCE:ETHUSDT',
-    'BINANCE:ETHBTC',
-  ];
-  // Mapping from Finnhub symbol to our display symbol
-  private readonly symbolMap = {
+
+  private readonly symbolMap: Record<string, string> = {
     'BINANCE:ETHUSDC': 'ETH/USDC',
     'BINANCE:ETHUSDT': 'ETH/USDT',
     'BINANCE:ETHBTC': 'ETH/BTC',
   };
+
+  private readonly symbols = Object.keys(this.symbolMap);
 
   private priceHistory: Record<string, { price: number; timestamp: number }[]> =
     {
@@ -48,7 +45,9 @@ export class FinnhubService implements OnModuleInit {
   private connect() {
     const apiKey = this.configService.get<string>('FINNHUB_API_KEY');
     if (!apiKey) {
-      this.logger.error('FINNHUB_API_KEY is not defined');
+      this.logger.error(
+        'FINNHUB_API_KEY is not defined in environment variables',
+      );
       return;
     }
 
@@ -58,12 +57,23 @@ export class FinnhubService implements OnModuleInit {
       this.logger.log('Connected to Finnhub WebSocket');
       this.symbols.forEach((symbol) => {
         this.ws.send(JSON.stringify({ type: 'subscribe', symbol }));
+        this.logger.debug(`Subscribed to ${symbol}`);
       });
     });
 
     this.ws.on('message', (data: WebSocket.Data) => {
       try {
-        const message = JSON.parse(data.toString()) as FinnhubMessage;
+        let dataString: string;
+        if (Buffer.isBuffer(data)) {
+          dataString = data.toString('utf-8');
+        } else if (Array.isArray(data)) {
+          dataString = Buffer.concat(data).toString('utf-8');
+        } else if (data instanceof ArrayBuffer) {
+          dataString = Buffer.from(data).toString('utf-8');
+        } else {
+          dataString = String(data);
+        }
+        const message = JSON.parse(dataString) as FinnhubMessage;
         if (message.type === 'trade') {
           message.data.forEach((trade: FinnhubTrade) => {
             const symbol = this.symbolMap[trade.s];
@@ -73,12 +83,15 @@ export class FinnhubService implements OnModuleInit {
           });
         }
       } catch (e) {
-        this.logger.error('Error parsing message', e);
+        this.logger.error(
+          'Error parsing WebSocket message',
+          e instanceof Error ? e.message : e,
+        );
       }
     });
 
     this.ws.on('error', (error) => {
-      this.logger.error('WebSocket error', error);
+      this.logger.error('WebSocket error occurred', error);
     });
 
     this.ws.on('close', () => {

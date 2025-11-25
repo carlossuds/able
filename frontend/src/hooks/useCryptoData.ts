@@ -15,7 +15,9 @@ export const useCryptoData = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const socket: Socket = io("http://localhost:3000");
+    const backendUrl =
+      import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+    const socket: Socket = io(backendUrl);
 
     socket.on("connect", () => {
       setIsConnected(true);
@@ -26,7 +28,7 @@ export const useCryptoData = () => {
       setIsConnected(false);
     });
 
-    socket.on("connect_error", (err) => {
+    socket.on("connect_error", (err: Error) => {
       setIsConnected(false);
       setError("Connection to backend failed");
       console.error("Socket connection error:", err);

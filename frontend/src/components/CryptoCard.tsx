@@ -1,11 +1,23 @@
 import React from "react";
 
+/**
+ * Props for the CryptoCard component.
+ */
 interface CryptoCardProps {
+  /** Cryptocurrency symbol (e.g., 'ETH/USDC') */
   symbol: string;
+  /** Current price in USD */
   price: number;
+  /** Hourly average price in USD */
   average: number;
 }
 
+/**
+ * Card component that displays current price and hourly average for a cryptocurrency.
+ * Uses color coding (green/red) to indicate if current price is above or below the hourly average.
+ * @param {CryptoCardProps} props - Component props
+ * @returns {JSX.Element} The rendered crypto card
+ */
 export const CryptoCard: React.FC<CryptoCardProps> = ({
   symbol,
   price,

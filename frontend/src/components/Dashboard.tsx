@@ -3,6 +3,12 @@ import { useCryptoData } from "../hooks/useCryptoData";
 import { CryptoCard } from "./CryptoCard";
 import { PriceChart } from "./PriceChart";
 
+/**
+ * Main dashboard component that displays real-time cryptocurrency data.
+ * Shows connection status, current prices in cards, and historical price charts.
+ * Handles loading states, connection errors, and gracefully displays data as it arrives.
+ * @returns {JSX.Element} The rendered dashboard
+ */
 export const Dashboard: React.FC = () => {
   const { data, history, isConnected, error } = useCryptoData();
 

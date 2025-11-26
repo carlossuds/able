@@ -10,11 +10,23 @@ import {
 } from "recharts";
 import type { CryptoData } from "../hooks/useCryptoData";
 
+/**
+ * Props for the PriceChart component.
+ */
 interface PriceChartProps {
+  /** Historical cryptocurrency data points */
   data: CryptoData[];
+  /** Cryptocurrency symbol for the chart title */
   symbol: string;
 }
 
+/**
+ * Chart component that displays price history for a cryptocurrency.
+ * Shows both current price (solid purple line) and hourly average (dashed green line).
+ * Uses Recharts library for responsive, interactive line charts.
+ * @param {PriceChartProps} props - Component props
+ * @returns {JSX.Element} The rendered price chart
+ */
 export const PriceChart: React.FC<PriceChartProps> = ({ data, symbol }) => {
   return (
     <div className="h-64 w-full bg-white/5 rounded-xl p-4 border border-white/10">

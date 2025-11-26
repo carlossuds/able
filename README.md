@@ -2,6 +2,10 @@
 
 A production-ready real-time cryptocurrency dashboard built with NestJS and React, displaying live prices and hourly averages for ETH/USDC, ETH/USDT, and ETH/BTC pairs from Finnhub.
 
+![Crypto Dashboard Screenshot](docs/images/dashboard-screenshot.png)
+
+> **Note:** The ETH/BTC pair shows zero values in the screenshot because Finnhub's WebSocket is not currently providing data for this exchange pair. The dashboard gracefully handles this by displaying zeros while continuing to stream live data for ETH/USDC and ETH/USDT.
+
 ## Prerequisites
 
 **Choose one of the following setup methods:**

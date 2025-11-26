@@ -15,7 +15,6 @@ frontend/coverage
 .env
 .env.local
 .env.*.local
-backend/.env
 frontend/.env
 
 # Git

@@ -9,7 +9,10 @@ import { CryptoModule } from './crypto/crypto.module';
  */
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '../.env', // Load .env from project root
+    }),
     FinnhubModule,
     CryptoModule,
   ],

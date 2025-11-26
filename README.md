@@ -4,13 +4,29 @@ A production-ready real-time cryptocurrency dashboard built with NestJS and Reac
 
 ## Prerequisites
 
+**Choose one of the following setup methods:**
+
+### Option A: Manual Setup
+
 - Node.js (v16+)
 - npm or pnpm
+
+### Option B: Docker Setup
+
+- Docker (v20.10+)
+- Docker Compose (v2.0+)
+
+**Both options require:**
+
 - Finnhub API Key (Get one for free at [finnhub.io](https://finnhub.io/))
+
+---
 
 ## Quick Start
 
-### 1. Clone and Install
+### Option A: Manual Setup
+
+#### 1. Clone and Install
 
 ```bash
 # Install backend dependencies
@@ -22,15 +38,15 @@ cd ../frontend
 npm install
 ```
 
-### 2. Configure Backend
+#### 2. Configure Environment
 
 ```bash
-cd backend
+# From project root
 cp .env.example .env
 # Edit .env and set your FINNHUB_API_KEY
 ```
 
-### 3. Run the Application
+#### 3. Run the Application
 
 **Terminal 1 - Backend:**
 
@@ -51,6 +67,40 @@ npm run dev
 Frontend runs on `http://localhost:5173`
 
 Open your browser to `http://localhost:5173` to see the dashboard.
+
+---
+
+### Option B: Docker Setup
+
+Run both backend and frontend in a single container:
+
+#### 1. Create Environment File
+
+```bash
+# Create .env file in project root
+echo "FINNHUB_API_KEY=your_api_key_here" > .env
+```
+
+#### 2. Build and Run
+
+**With Docker Compose (recommended):**
+
+```bash
+docker-compose up --build
+```
+
+**Or with Docker directly:**
+
+```bash
+docker build -t crypto-dashboard .
+docker run -d -p 3000:3000 -p 5173:5173 -e FINNHUB_API_KEY=your_key crypto-dashboard
+```
+
+#### 3. Access the Application
+
+Open your browser to `http://localhost:5173` to see the dashboard.
+
+---
 
 ## Testing
 
